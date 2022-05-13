@@ -6,10 +6,10 @@ brand:
 {{inject "brandProductsPerPage" theme_settings.brandpage_products_per_page}}
 {{#partial "head"}}
     {{#if brand.image}}
-    <link rel="preload" as="image" href="{{getImageSrcset brand.image 1x=(concat (first (split theme_settings.thumb_size 'x')) 'w')}}" importance="high">
+    <link rel="preload" as="image" href="{{getImageSrcset brand.image 1x=(concat (first (split theme_settings.thumb_size 'x')) 'w')}}" fetchpriority="high">
     {{else}}
     {{#if brand.products.[0].image}}
-    <link rel="preload" as="image" href="{{getImageSrcset brand.products.[0].image 1x='320px'}}" importance="high">
+    <link rel="preload" as="image" href="{{getImageSrcset brand.products.[0].image 1x='320px'}}" fetchpriority="high">
     {{/if}}
     {{/if}}
     {{#if pagination.brand.previous}}
@@ -28,7 +28,7 @@ brand:
             image=brand.image
             fallback_size=theme_settings.thumb_size
             loading='eager'
-            importance='high'
+            fetchpriority='high'
             sizes=(concat (first (split theme_settings.thumb_size 'x')) 'px')
         }}
     </div>

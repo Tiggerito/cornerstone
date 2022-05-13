@@ -17,16 +17,16 @@ category:
     {{!--  preload the category image and the first 3 product images. This is because on desktop 3 product images are visible. No harm in getting a few extra images loaded. --}} 
 
     {{#if category.image}}
-    <link rel="preload" as="image" href="{{getImageSrcset category.image 1x=(concat (first (split theme_settings.zoom_size 'x')) 'w')}}" importance="high">
+    <link rel="preload" as="image" href="{{getImageSrcset category.image 1x=(concat (first (split theme_settings.zoom_size 'x')) 'w')}}" fetchpriority="high">
     {{/if}}
     {{#if category.products.[0].image}}
-    <link rel="preload" as="image" href="{{getImageSrcset category.products.[0].image 1x=(concat (first (split theme_settings.productgallery_size 'x')) 'w')}}" importance="high">
+    <link rel="preload" as="image" href="{{getImageSrcset category.products.[0].image 1x=(concat (first (split theme_settings.productgallery_size 'x')) 'w')}}" fetchpriority="high">
     {{/if}}
     {{#if category.products.[1].image}}
-    <link rel="preload" as="image" href="{{getImageSrcset category.products.[1].image 1x=(concat (first (split theme_settings.productgallery_size 'x')) 'w')}}" importance="high">
+    <link rel="preload" as="image" href="{{getImageSrcset category.products.[1].image 1x=(concat (first (split theme_settings.productgallery_size 'x')) 'w')}}" fetchpriority="high">
     {{/if}}
     {{#if category.products.[2].image}}
-    <link rel="preload" as="image" href="{{getImageSrcset category.products.[2].image 1x=(concat (first (split theme_settings.productgallery_size 'x')) 'w')}}" importance="high">
+    <link rel="preload" as="image" href="{{getImageSrcset category.products.[2].image 1x=(concat (first (split theme_settings.productgallery_size 'x')) 'w')}}" fetchpriority="high">
     {{/if}}
 
     {{!--  
@@ -102,7 +102,7 @@ category:
         image=category.image
         lazyload=theme_settings.lazyload_mode
         loading='eager'
-        importance='high'
+        fetchpriority='high'
         fallback_size=theme_settings.zoom_size
         class="category-header-image"
         sizes=(concat (first (split theme_settings.zoom_size 'x')) 'px')

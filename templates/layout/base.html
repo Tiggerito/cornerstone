@@ -134,9 +134,9 @@
         {{!-- Header logo preload --}}
         {{#if settings.store_logo.image}}
         {{#if theme_settings.logo_size '===' 'original'}}
-        <link rel="preload" href="{{getImage settings.store_logo.image 'logo_size'}}" as="image" importance="high">
+        <link rel="preload" href="{{getImage settings.store_logo.image 'logo_size'}}" as="image" fetchpriority="high">
         {{else}}
-        <link rel="preload" href="{{getImage settings.store_logo.image 'logo_size'}}" imagesrcset="{{getImageSrcset1x2x settings.store_logo.image theme_settings.logo_size}}" as="image" importance="high">
+        <link rel="preload" href="{{getImage settings.store_logo.image 'logo_size'}}" imagesrcset="{{getImageSrcset1x2x settings.store_logo.image theme_settings.logo_size}}" as="image" fetchpriority="high">
         {{/if}}
         {{/if}}
 
@@ -347,9 +347,9 @@
                 visibility: hidden;
             }
         </style>
-        {{!-- preload + script async is to make sure it still loads at a high priority but non blocking. In the future importance of high will do the same. --}}
-        <link rel="preload" href="{{cdn 'assets/dist/theme-bundle.font.js'}}" crossorigin="anonymous" importance="high" as="script">
-        <script async defer src="{{cdn 'assets/dist/theme-bundle.font.js'}}" crossorigin="anonymous" importance="high"></script>
+        {{!-- preload + script async is to make sure it still loads at a high priority but non blocking. In the future fetchpriority of high will do the same. --}}
+        <link rel="preload" href="{{cdn 'assets/dist/theme-bundle.font.js'}}" crossorigin="anonymous" fetchpriority="high" as="script">
+        <script async defer src="{{cdn 'assets/dist/theme-bundle.font.js'}}" crossorigin="anonymous" fetchpriority="high"></script>
  
         {{!-- 
             Main CSS
@@ -376,9 +376,9 @@
 
         --}}
         {{#if page_type '===' 'category'}}
-        {{{stylesheet '/assets/css/theme.css' rel="preload" as="style" importance="high" onload="this.onload=null;this.rel='stylesheet';var e=document.getElementById('inline-css');e.parentNode.removeChild(e);"}}}
+        {{{stylesheet '/assets/css/theme.css' rel="preload" as="style" fetchpriority="high" onload="this.onload=null;this.rel='stylesheet';var e=document.getElementById('inline-css');e.parentNode.removeChild(e);"}}}
         {{else}}
-        {{{stylesheet '/assets/css/theme.css' importance="high"}}}
+        {{{stylesheet '/assets/css/theme.css' fetchpriority="high"}}}
         {{/if}}
 
         {{!-- The sudden appearance of the scrollbar seemed to cause a layout shift, so I made it show from the start --}}
@@ -408,7 +408,7 @@
             If you use Google Optimize a preload will help reduce flicker when it changes the page  
         --}}
         {{!--
-        <link rel="preload" href="https://www.googleoptimize.com/optimize.js?id=OPT-XXXXXXX" crossorigin="anonymous" importance="high" as="script">
+        <link rel="preload" href="https://www.googleoptimize.com/optimize.js?id=OPT-XXXXXXX" crossorigin="anonymous" fetchpriority="high" as="script">
         --}}
 
         {{!-- 

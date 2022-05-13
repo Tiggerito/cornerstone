@@ -44,17 +44,17 @@
        'lazy' is good for images that are lower down on the page, especially when the page is long and contains lots of images
        'eager' is good for lower down images that for some reason need to be loaded early on.
        If 'lazy' is set, Lazysizes or the browsers native lazy-loading mechanism will be used.
-    'importance': 'auto' (default), 'high', 'low'
-       In the future importance="high" will cause the browser to load an image much sooner.
+    'fetchpriority': 'auto' (default), 'high', 'low'
+       In the future fetchpriority="high" will cause the browser to load an image much sooner.
        This is very good for images that are initially visible on a page.
        It is very good at reducing the Core Web Vitals LCP score.
-       Importance of 'high' will also cause the LQIP image to be preloaded at a high importance level.
+       Fetch priority of 'high' will also cause the LQIP image to be preloaded at a high fetchpriority level.
     'placeholder': 'auto' (default), 'lqip'
        By default a blank image is used before the main image is loaded. The 'placeholder-auto' class can be used to decide how it looks.
        'lqip' means a Low Quality Image Placeholder is loaded fist...
        On slower connections the user will initially see a blurry version of the image while the full version of the image loads.
        This can provide a better user experience but does add the loading of an extra small image.
-       It's of little value to use 'lqip' on smaller images (LQIP images are 80 pixels wide) or images that typically load before the page is rendered (preloaded or importance high).
+       It's of little value to use 'lqip' on smaller images (LQIP images are 80 pixels wide) or images that typically load before the page is rendered (preloaded or fetchpriority high).
     'sizes':
        https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images
        The sizes attribute value.
@@ -126,13 +126,13 @@
 {{assignVar 'responsivePlaceholder' 'auto'}}
 {{/if}}
 
-{{#all (if (getVar 'responsivePlaceholder') '===' 'lqip') (if importance '===' 'high') (if image)}}
-<link rel="preload" as="image" href="{{getImageSrcset image 1x=(default lqip_size '80w')}}" importance="high">
+{{#all (if (getVar 'responsivePlaceholder') '===' 'lqip') (if fetchpriority '===' 'high') (if image)}}
+<link rel="preload" as="image" href="{{getImageSrcset image 1x=(default lqip_size '80w')}}" fetchpriority="high">
 {{/all}}
 
 <img {{#if image}}
      src="{{getImageSrcset image 1x=(default fallback_size '160w')}}" alt="{{image.alt}}"
-     {{#if importance}} importance="{{importance}}" {{/if}}
+     {{#if fetchpriority}} fetchpriority="{{fetchpriority}}" {{/if}}
      {{#if (getVar 'responsiveLoading') '===' 'lazy'}}
      loading="lazy"
      {{#if lazysizes '!==' 'disabled'}}
