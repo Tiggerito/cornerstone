@@ -294,6 +294,8 @@
         </style>
         {{!-- This could be done instead to stop the testing tools complain about a blocking css file. It is small so it makes little difference --}}
         {{!-- <link href="https://fonts.googleapis.com/css?family=Roboto:400|Volkhov:400|Montserrat:500&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'"> --}}
+        {{!-- this is so fonts.js can know what fonts are used --}} 
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400|Volkhov:400|Montserrat:500&display=swap">
 
         {{!-- webfontloader --}}
         {{!--             
@@ -321,7 +323,7 @@
                 cl.add("wf-loading"); 
 
                 if (performance.now) {
-                    var timeLeft = 2400-performance.now();
+                    var timeLeft = 2300-performance.now();
                     console.log('wf-loading-set-timeout '+timeLeft);
                     if (timeLeft > 0){
                         cl.add("wf-loading-set-timeout");
@@ -329,17 +331,17 @@
                     }
                 }
 
-                var regex = /family=([^&]*)/gm;
+                // var regex = /family=([^&]*)/gm;
 
-                var families=regex.exec('{{ getFontsCollection }}')[1].replace(/\+/gm,' ').split('|');
+                // var families=regex.exec('{{ getFontsCollection }}')[1].replace(/\+/gm,' ').split('|');
 
-                w.WebFontConfig = {
-                    custom: {
-                        families: families,
-                        text: 'abcdefghijklmnopqrstuvwxyz!' 
-                    },
-                    events: false
-                };
+                // w.WebFontConfig = {
+                //     custom: {
+                //         families: families,
+                //         text: 'abcdefghijklmnopqrstuvwxyz!' 
+                //     },
+                //     events: false
+                // };
             }(window,document)
         </script>
         <style>
