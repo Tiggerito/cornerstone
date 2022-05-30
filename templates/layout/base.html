@@ -293,8 +293,12 @@
             }
         </style>
         {{!-- This could be done instead to stop the testing tools complain about a blocking css file. It is small so it makes little difference --}}
-        {{!-- <link href="https://fonts.googleapis.com/css?family=Roboto:400|Volkhov:400|Montserrat:500&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'"> --}}
-        {{!-- this is so fonts.js can know what fonts are used --}} 
+        {{!-- <link href="https://fonts.googleapis.com/css?family=Roboto:400|Volkhov:400|Montserrat:500&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'"> --}}        
+        {{!-- 
+            this is so webfontloader and fonts.js can know what fonts are used 
+            it is extremely important that these fonts are actually used. if not, the font flicker fixer will cause LCP to be 2.5 seconds
+            alternatively just go with the blocking font request with getFontsCollection
+        --}} 
         <link href="https://fonts.googleapis.com/css?family=Roboto:400|Volkhov:400|Montserrat:500&display=swap">
 
         {{!-- webfontloader --}}
@@ -310,7 +314,7 @@
             The timeout period is designed to happen just before LCP goes from good to needs improvement (2.5 seconds). This means we will try and pass LCP over causing some small layout shifts due to fonts loading.
             This typically means Lighthouse and Page Speed Insights in mobile mode will not hide the page at all and therefore not delay LCP. While in desktop mode it will hide to reduce font based layout shifts
 
-            If webfontloader is given a font that is not in the CSS, the .wf-loading is not removed for 5 seconds. I presume it is waiting for the expected CSS. So the families in webfontloader need to be right.
+            If webfontloader is given a font that is not in the CSS (or used?), the .wf-loading is not removed for 5 seconds. I presume it is waiting for the expected CSS. So the families in webfontloader need to be right.
             The code extracts the families from getFontsCollection to ensure that. This is a hack. It would be better if BCs system provided the correct list. 
 
             https://github.com/typekit/webfontloader
@@ -331,19 +335,9 @@
                     }
                 }
 
-                // var regex = /family=([^&]*)/gm;
-
-                // var families=regex.exec('{{ getFontsCollection }}')[1].replace(/\+/gm,' ').split('|');
-
-                // w.WebFontConfig = {
-                //     custom: {
-                //         families: families,
-                //         text: 'abcdefghijklmnopqrstuvwxyz!' 
-                //     },
-                //     events: false
-                // };
             }(window,document)
         </script>
+        {{!-- this will cause issues of the selected fonts are not used --}}
         <style>
             .wf-loading.wf-loading-set-timeout body {
                 visibility: hidden;
