@@ -20,7 +20,6 @@ brands:
                                 {{> components/common/responsive-img
                                     image=image
                                     class="card-image"
-                                    lazyload=../theme_settings.lazyload_mode
                                     loading='eager'
                                     fetchpriority='high'
                                     fallback_size=../theme_settings.brand_size
@@ -31,7 +30,6 @@ brands:
                                 {{> components/common/responsive-img
                                     image=image
                                     class="card-image"
-                                    lazyload=../theme_settings.lazyload_mode
                                     fallback_size=theme_settings.brand_size
                                     default_image=../theme_settings.default_image_brand
                                     sizes=(concat (first (split ../theme_settings.brand_size 'x')) 'px')

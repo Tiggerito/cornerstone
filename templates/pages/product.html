@@ -13,9 +13,9 @@ product:
 
 {{#partial "head"}}
     {{#if product.main_image}}
-    <link rel="preload" as="image" href="{{getImageSrcset product.main_image 1x=(concat (first (split theme_settings.product_size 'x')) 'w')}}" fetchpriority="high">
+    <link rel="preload" as="image" href="{{getImageSrcset product.main_image 1x=(concat (first (split theme_settings.product_size 'x')) 'w')}}">
     {{else}}
-    <link rel="preload" as="image" href="{{getImageSrcset theme_settings.default_image_product 1x=(concat (first (split theme_settings.product_size 'x')) 'w')}}" fetchpriority="high">
+    <link rel="preload" as="image" href="{{getImageSrcset theme_settings.default_image_product 1x=(concat (first (split theme_settings.product_size 'x')) 'w')}}">
     {{/if}}
 {{/partial}}
 

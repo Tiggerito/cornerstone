@@ -134,9 +134,9 @@
         {{!-- Header logo preload --}}
         {{#if settings.store_logo.image}}
         {{#if theme_settings.logo_size '===' 'original'}}
-        <link rel="preload" href="{{getImage settings.store_logo.image 'logo_size'}}" as="image" fetchpriority="high">
+        <link rel="preload" href="{{getImage settings.store_logo.image 'logo_size'}}" as="image">
         {{else}}
-        <link rel="preload" href="{{getImage settings.store_logo.image 'logo_size'}}" imagesrcset="{{getImageSrcset1x2x settings.store_logo.image theme_settings.logo_size}}" as="image" fetchpriority="high">
+        <link rel="preload" href="{{getImage settings.store_logo.image 'logo_size'}}" imagesrcset="{{getImageSrcset1x2x settings.store_logo.image theme_settings.logo_size}}" as="image">
         {{/if}}
         {{/if}}
 
@@ -348,7 +348,7 @@
             }
         </style>
         {{!-- preload + script async is to make sure it still loads at a high priority but non blocking. In the future fetchpriority of high will do the same. --}}
-        <link rel="preload" href="{{cdn 'assets/dist/theme-bundle.font.js'}}" crossorigin="anonymous" fetchpriority="high" as="script">
+        <link rel="preload" href="{{cdn 'assets/dist/theme-bundle.font.js'}}" crossorigin="anonymous" as="script">
         <script async defer src="{{cdn 'assets/dist/theme-bundle.font.js'}}" crossorigin="anonymous" fetchpriority="high"></script>
  
         {{!-- 
@@ -393,7 +393,7 @@
 
         {{!-- 
             Preload specific urls in the footer scripts.
-            This is a hack. it would be better for the system to provide the preload stuff for us 
+            This is a hack. it would be better for the system to provide the preload stuff for us, and/or to implement fetchpriority 
         --}}
         {{#eachIndex (split footer.scripts '"')}}
         {{#startsWith "https://cdn11.bigcommerce.com/shared/js/csrf-protection-header-" item}}
@@ -408,7 +408,7 @@
             If you use Google Optimize a preload will help reduce flicker when it changes the page  
         --}}
         {{!--
-        <link rel="preload" href="https://www.googleoptimize.com/optimize.js?id=OPT-XXXXXXX" crossorigin="anonymous" fetchpriority="high" as="script">
+        <link rel="preload" href="https://www.googleoptimize.com/optimize.js?id=OPT-XXXXXXX" crossorigin="anonymous" as="script">
         --}}
 
         {{!-- 
@@ -540,6 +540,7 @@
                 var script = d.createElement('script');
                 script.src = "{{cdn 'assets/dist/theme-bundle.main.js'}}";
                 script.crossOrigin = "anonymous";
+                script.fetchpriority = "high";
                 script.async = true;
                 script.onload = script.onreadystatechange = function () {
                     if (!done) {

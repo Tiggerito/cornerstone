@@ -93,6 +93,14 @@
       Ability to use browser setting for Save-Data or network speed to disable LQIP and maybe even reduce image sizes.
     --}}
 
+{{#if lazyload}}
+{{assignVar 'lazyloadmode' lazyload}}
+{{else if theme_settings.lazyload_mode}}
+{{assignVar 'lazyloadmode' theme_settings.lazyload_mode}}
+{{else if ../theme_settings.lazyload_mode}}
+{{assignVar 'lazyloadmode' theme_settings.lazyload_mode}}
+{{/if}}
+
 {{#if (isString sizes) '===' false}}
 {{assignVar 'responsiveSizes' (get 'string' sizes)}}
 {{else if sizes}}
@@ -110,9 +118,9 @@
 
 {{#if loading}}
 {{assignVar 'responsiveLoading' loading}}
-{{else if lazyload '===' 'lazyload'}}
+{{else if (getVar 'lazyloadmode') '===' 'lazyload'}}
 {{assignVar 'responsiveLoading' 'lazy'}}
-{{else if lazyload '===' 'lazyload+lqip'}}
+{{else if (getVar 'lazyloadmode') '===' 'lazyload+lqip'}}
 {{assignVar 'responsiveLoading' 'lazy'}}
 {{else}}
 {{assignVar 'responsiveLoading' 'auto'}}
@@ -120,14 +128,14 @@
 
 {{#if placeholder}}
 {{assignVar 'responsivePlaceholder' placeholder}}
-{{else if lazyload '===' 'lazyload+lqip'}}
+{{else if (getVar 'lazyloadmode') '===' 'lazyload+lqip'}}
 {{assignVar 'responsivePlaceholder' 'lqip'}}
 {{else}}
 {{assignVar 'responsivePlaceholder' 'auto'}}
 {{/if}}
 
 {{#all (if (getVar 'responsivePlaceholder') '===' 'lqip') (if fetchpriority '===' 'high') (if image)}}
-<link rel="preload" as="image" href="{{getImageSrcset image 1x=(default lqip_size '80w')}}" fetchpriority="high">
+<link rel="preload" as="image" href="{{getImageSrcset image 1x=(default lqip_size '80w')}}">
 {{/all}}
 
 <img {{#if image}}
