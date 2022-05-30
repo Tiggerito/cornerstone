@@ -134,9 +134,9 @@
         {{!-- Header logo preload --}}
         {{#if settings.store_logo.image}}
         {{#if theme_settings.logo_size '===' 'original'}}
-        <link rel="preload" href="{{getImage settings.store_logo.image 'logo_size'}}" as="image">
+        <link rel="preload" href="{{getImage settings.store_logo.image 'logo_size'}}" as="image" fetchpriority="high">
         {{else}}
-        <link rel="preload" href="{{getImage settings.store_logo.image 'logo_size'}}" imagesrcset="{{getImageSrcset1x2x settings.store_logo.image theme_settings.logo_size}}" as="image">
+        <link rel="preload" href="{{getImage settings.store_logo.image 'logo_size'}}" imagesrcset="{{getImageSrcset1x2x settings.store_logo.image theme_settings.logo_size}}" as="image" fetchpriority="high">
         {{/if}}
         {{/if}}
 

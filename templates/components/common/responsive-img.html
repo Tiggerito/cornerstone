@@ -135,7 +135,7 @@
 {{/if}}
 
 {{#all (if (getVar 'responsivePlaceholder') '===' 'lqip') (if fetchpriority '===' 'high') (if image)}}
-<link rel="preload" as="image" href="{{getImageSrcset image 1x=(default lqip_size '80w')}}">
+<link rel="preload" as="image" href="{{getImageSrcset image 1x=(default lqip_size '80w')}}" fetchpriority="high">
 {{/all}}
 
 <img {{#if image}}
