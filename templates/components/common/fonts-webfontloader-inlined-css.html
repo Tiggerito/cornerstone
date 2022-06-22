@@ -1,0 +1,193 @@
+        <link rel="preconnect" href="https://fonts.gstatic.com"  crossorigin="anonymous">
+        <link rel="dns-prefetch" href="https://fonts.gstatic.com"  crossorigin="anonymous">
+       {{!-- 
+        Here we inline the file normally returned by getFontsCollection 
+        This causes earlier font preloads (before webfontloader) as we have removed all render blocking, the html is parsed and the CSS is already present
+        It also makes the font urls static so we can do things like preloads.
+        May need periodic review to see if the contents of the getFontsCollection url change
+        Will be out of sync if fonts are changed in the page builder
+
+        Improvement would be to generate this from the url in getFontsCollection on theme or theme setting updates. Could this be built in?
+
+        Feature: check save-data setting, if on stop all web fonts loading. This will save a lot of data for them and improve LCP scores on those devices. 
+        It would be nice to have a stencil setting indicating if save_data is on so we can use handlebars to do the saving on the server side.
+        network connection speed could also be used to limit resources. e.g. if 2g or less don't use web fonts.
+        https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/save-data
+    --}}
+    {{!-- If you know what fonts will be used in advance you can preload them. But make sure this is kept up to date --}} 
+    <link rel="preload" href="https://fonts.gstatic.com/s/sourcesanspro/v18/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7l.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/volkhov/v15/SlGQmQieoJcKemNecTUEhQ.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="https://fonts.gstatic.com/s/montserrat/v21/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtZ6Hw5aXo.woff2" as="font" type="font/woff2" crossorigin>
+    <style>
+        /* cyrillic-ext */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 500;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/montserrat/v21/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtZ6Hw0aXpsog.woff2) format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+        /* cyrillic */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 500;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/montserrat/v21/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtZ6Hw9aXpsog.woff2) format('woff2');
+            unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+        /* vietnamese */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 500;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/montserrat/v21/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtZ6Hw2aXpsog.woff2) format('woff2');
+            unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+        }
+        /* latin-ext */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 500;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/montserrat/v21/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtZ6Hw3aXpsog.woff2) format('woff2');
+            unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+        /* latin */
+        @font-face {
+            font-family: 'Montserrat';
+            font-style: normal;
+            font-weight: 500;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/montserrat/v21/JTUHjIg1_i6t8kCHKm4532VJOt5-QNFgpCtZ6Hw5aXo.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+        /* cyrillic-ext */
+        @font-face {
+            font-family: 'Source Sans Pro';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/sourcesanspro/v18/6xK3dSBYKcSV-LCoeQqfX1RYOo3qNa7lqDY.woff2) format('woff2');
+            unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+        }
+        /* cyrillic */
+        @font-face {
+            font-family: 'Source Sans Pro';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/sourcesanspro/v18/6xK3dSBYKcSV-LCoeQqfX1RYOo3qPK7lqDY.woff2) format('woff2');
+            unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+        }
+        /* greek-ext */
+        @font-face {
+            font-family: 'Source Sans Pro';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/sourcesanspro/v18/6xK3dSBYKcSV-LCoeQqfX1RYOo3qNK7lqDY.woff2) format('woff2');
+            unicode-range: U+1F00-1FFF;
+        }
+        /* greek */
+        @font-face {
+            font-family: 'Source Sans Pro';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/sourcesanspro/v18/6xK3dSBYKcSV-LCoeQqfX1RYOo3qO67lqDY.woff2) format('woff2');
+            unicode-range: U+0370-03FF;
+        }
+        /* vietnamese */
+        @font-face {
+            font-family: 'Source Sans Pro';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/sourcesanspro/v18/6xK3dSBYKcSV-LCoeQqfX1RYOo3qN67lqDY.woff2) format('woff2');
+            unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+1EA0-1EF9, U+20AB;
+        }
+        /* latin-ext */
+        @font-face {
+            font-family: 'Source Sans Pro';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/sourcesanspro/v18/6xK3dSBYKcSV-LCoeQqfX1RYOo3qNq7lqDY.woff2) format('woff2');
+            unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        }
+        /* latin */
+        @font-face {
+            font-family: 'Source Sans Pro';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/sourcesanspro/v18/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7l.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+        /* latin */
+        @font-face {
+            font-family: 'Volkhov';
+            font-style: normal;
+            font-weight: 400;
+            font-display: swap;
+            src: url(https://fonts.gstatic.com/s/volkhov/v15/SlGQmQieoJcKemNecTUEhQ.woff2) format('woff2');
+            unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        }
+    </style>
+    {{!-- This could be done instead to stop the testing tools complain about a blocking css file. It is small so it makes little difference --}}
+    {{!-- <link href="https://fonts.googleapis.com/css?family=Roboto:400|Volkhov:400|Montserrat:500&display=swap" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'"> --}}        
+    {{!-- 
+        this is so webfontloader and fonts.js can know what fonts are used 
+        it is extremely important that these fonts are actually used. if not, the font flicker fixer will cause LCP to be 2.5 seconds
+        alternatively just go with the blocking font request with getFontsCollection
+    --}} 
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400|Volkhov:400|Montserrat:500&display=swap">
+
+    {{!-- webfontloader --}}
+    {{!--             
+        This section is based on this pull request that moves webfont.js into the CDN saving the need to establish a new connection: https://github.com/bigcommerce/cornerstone/pull/2158/files 
+
+        This solution has no render blocking resources, so the page can be rendered as soon as the html is loaded. This causes a problem as the fonts will most likely load after rendering causing layout shifts. My solution is to hide the page until the fonts are loaded or some time seconds has elapsed. 
+
+        The code sets both .wf-loading and .wf-loading-set-timeout from the start, with CSS to hide the page when both are set.
+        Either webfontloader will remove .wf-loading when the fonts are loaded or our timeout will remove .wf-loading-set-timeout. And the page will show.
+        This means the page should show as soon as the fonts are loaded and avoid layout shifts, or at the allocated timeout.
+
+        The timeout period is designed to happen just before LCP goes from good to needs improvement (2.5 seconds). This means we will try and pass LCP over causing some small layout shifts due to fonts loading.
+        This typically means Lighthouse and Page Speed Insights in mobile mode will not hide the page at all and therefore not delay LCP. While in desktop mode it will hide to reduce font based layout shifts
+
+        If webfontloader is given a font that is not in the CSS (or used?), the .wf-loading is not removed for 5 seconds. I presume it is waiting for the expected CSS. So the families in webfontloader need to be right.
+        The code extracts the families from getFontsCollection to ensure that. This is a hack. It would be better if BCs system provided the correct list. 
+
+        https://github.com/typekit/webfontloader
+        https://github.com/typekit/webfontloader#custom
+        https://github.com/typekit/fvd#values
+    --}} 
+    <script>
+        !function(w,d){
+            var cl=d.getElementsByTagName('html')[0].classList;
+            cl.add("wf-loading"); 
+
+            if (performance.now) {
+                var timeLeft = 2300-performance.now();
+                console.log('wf-loading-set-timeout '+timeLeft);
+                if (timeLeft > 0){
+                    cl.add("wf-loading-set-timeout");
+                    setTimeout(function(){cl.remove("wf-loading-set-timeout")},timeLeft);
+                }
+            }
+
+        }(window,document)
+    </script>
+    {{!-- this will cause issues of the selected fonts are not used --}}
+    <style>
+        .wf-loading.wf-loading-set-timeout body {
+            visibility: hidden;
+        }
+    </style>
+    {{!-- preload + script async is to make sure it still loads at a high priority but non blocking. In the future fetchpriority of high will do the same. --}}
+    <link rel="preload" href="{{cdn 'assets/dist/theme-bundle.font.js'}}" crossorigin="anonymous" as="script">
+    <script async defer src="{{cdn 'assets/dist/theme-bundle.font.js'}}" crossorigin="anonymous" fetchpriority="high"></script>
