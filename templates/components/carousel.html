@@ -21,22 +21,24 @@
             {{else}}
             <div class="heroCarousel-image-wrapper">
             {{/if}}
-            {{#if @first}}
-                {{> components/common/responsive-img
-                    image=stencil_image
-                    class="heroCarousel-image"
-                    fallback_size='1280w'
-                    placeholder='lqip'
-                    sizes='(max-width: 640px) 640px, (max-width: 1280px) 1280px, (max-width: 1920px) 1920px, 2560px'
-                }}
+            {{#if @index '<=' 2}}
+            {{> components/common/responsive-img
+                image=stencil_image
+                class="heroCarousel-image"
+                fallback_size='1280w'
+                placeholder='lqip'
+                loading='eager'
+                fetchpriority='high'
+                sizes='(max-width: 640px) 640px, (max-width: 1280px) 1280px, (max-width: 1920px) 1920px, 2560px'
+            }}
             {{else}}
-                {{> components/common/responsive-img
-                    image=stencil_image
-                    class="heroCarousel-image"
-                    fallback_size='1280w'
-                    loading='lazy'
-                    sizes='(max-width: 640px) 640px, (max-width: 1280px) 1280px, (max-width: 1920px) 1920px, 2560px'
-                }}
+            {{> components/common/responsive-img
+                image=stencil_image
+                class="heroCarousel-image"
+                fallback_size='1280w'
+                loading='auto'
+                sizes='(max-width: 640px) 640px, (max-width: 1280px) 1280px, (max-width: 1920px) 1920px, 2560px'
+            }}
             {{/if}}
             {{#if button_text}}
             </a>

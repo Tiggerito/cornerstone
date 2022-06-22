@@ -168,6 +168,9 @@
      src="{{cdn default_image}}"
      alt="{{lang 'products.card_default_image_alt'}}"
      class="responsive-img loading-auto placeholder-auto default-image{{#if class}} {{class}}{{/if}}"
+     {{#if (getVar 'responsiveLoading') '!==' 'auto'}}
+     loading="{{getVar 'responsiveLoading'}}"
+     {{/if}}
      {{else}}
      src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=="
      alt=""
