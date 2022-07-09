@@ -41,6 +41,8 @@
             An improvement would be to add lazysizes.min.js into the theme to avoid a possible connection delay
         --}}
         <script>
+            console.log('now start: ' + performance.now());
+
             !function(w,d){           
                 var native = 'loading' in HTMLImageElement.prototype;
 
@@ -140,11 +142,10 @@
 
         {{> components/common/polyfill-script }}
 
-        {{!-- preload theme-bundle.main.js early as it is big and it is in the footer (required) and out of the cache --}}
-        <link rel="preload" href="{{cdn 'assets/dist/theme-bundle.main.js'}}" crossorigin="anonymous" as="script" fetchpriority="high">
+
 
         {{!-- 
-            Main CSS - start loading early as it is big and render blocking
+            Main CSS - preload here so it starts quick, but only do the real tag at the end of the head so it does not block scripts in the head
     
             The recommended solution is to inline everything that does the main layout for a page and async load the rest.
 
@@ -167,11 +168,18 @@
             main.js plays with a few things including the faceted navigation, and this causes a small layout shift.
 
         --}}
+        <script>
+            console.log('now css before: ' + performance.now());
+        </script>
         {{#if page_type '===' 'category'}}
         {{{stylesheet '/assets/css/theme.css' rel="preload" as="style" fetchpriority="high" onload="this.onload=null;this.rel='stylesheet';var e=document.getElementById('inline-css');e.parentNode.removeChild(e);"}}}
         {{else}}
-        {{{stylesheet '/assets/css/theme.css' fetchpriority="high"}}}
+        {{!-- call it for real at the end of the head so it does not block scripts --}}
+        {{{stylesheet '/assets/css/theme.css' rel="preload" as="style" fetchpriority="high"}}}
         {{/if}}
+        <script>
+            console.log('now css after: ' + performance.now());
+        </script>
 
         {{!-- Different ways to load web fonts. do after js and css as they are smaller --}}
         {{!-- {{> components/common/fonts-webfontloader-inlined-css }} --}}
@@ -199,18 +207,7 @@
             }
         </style>
 
-        {{!-- 
-            Preload specific urls in the footer scripts.
-            This is a hack. it would be better for the system to provide the preload stuff for us, and/or to implement fetchpriority 
-        --}}
-        {{#eachIndex (split footer.scripts '"')}}
-        {{#startsWith "https://cdn11.bigcommerce.com/shared/js/csrf-protection-header-" item}}
-        <link rel="preload" href="{{item}}" as="script">
-        {{/startsWith}}
-        {{#startsWith "https://cdn11.bigcommerce.com/shared/js/datatags-" item}}
-        <link rel="preload" href="{{item}}" as="script">
-        {{/startsWith}}
-        {{/eachIndex}}
+
 
         {{!--        
             If you use Google Optimize a preload will help reduce flicker when it changes the page  
@@ -273,6 +270,26 @@
         <link rel="dns-prefetch" href="https://aly.jst.ai">
         --}}
 
+        {{!-- 
+            preload theme-bundle.main.js early as it is big and it is in the footer (required) and out of the cache 
+            priority is low as it does not need to run quickly. Let the browser start loading it when it is good and ready 
+            The footer waits until it creates the real script, so this is needed to make sure it gets going            
+        --}}
+        <link rel="preload" href="{{cdn 'assets/dist/theme-bundle.main.js'}}" crossorigin="anonymous" as="script" fetchpriority="low">
+
+        {{!-- 
+            Preload specific urls in the footer scripts.
+            This is a hack. it would be better for the system to provide the preload stuff for us, and/or to implement fetchpriority 
+        --}}
+        {{#eachIndex (split footer.scripts '"')}}
+        {{#startsWith "https://cdn11.bigcommerce.com/shared/js/csrf-protection-header-" item}}
+        <link rel="preload" href="{{item}}" as="script" fetchpriority="low">
+        {{/startsWith}}
+        {{#startsWith "https://cdn11.bigcommerce.com/shared/js/datatags-" item}}
+        <link rel="preload" href="{{item}}" as="script" fetchpriority="low">
+        {{/startsWith}}
+        {{/eachIndex}}
+
         {{!-- ****** Page Static Resources ****** --}}
         {{!-- Possible to cache at a page level. Rarely change but are page specific and could request resources --}}
 
@@ -323,6 +340,20 @@
         {{~inject 'carouselArrowAndDotAriaLabel' (lang 'carousel.arrow_and_dot_aria_label')}}
         {{~inject 'carouselActiveDotAriaLabel' (lang 'carousel.active_dot_aria_label')}}
         {{~inject 'carouselContentAnnounceMessage' (lang 'carousel.content_announce_message')}}
+
+        <script>
+            console.log('now head end: ' + performance.now());
+        </script>
+        {{#if page_type '!==' 'category'}}
+        {{!-- 
+            real css call here. needs to be in the head but after scripts so it does not block them 
+            it will block any scripts in the body
+        --}}
+        {{{stylesheet '/assets/css/theme.css' fetchpriority="high"}}}
+        {{/if}}
+        <script>  
+            console.log('now head end css: ' + performance.now());
+        </script>
     </head>
     <body>
         <svg data-src="{{cdn 'img/icon-sprite.svg'}}" class="icons-svg-sprite"></svg>
@@ -334,6 +365,8 @@
         <script>window.__webpack_public_path__ = "{{cdn 'assets/dist/'}}";</script>
 
         {{!-- 
+            Note that code after the head will not run until the css file has been loaded
+            Not an issue here as we're not in a real rush to run this. 
             Stop theme-bundle.main.js from blocking
             Replace the theme-bundle.main.js script and stencilBootstrap script after it with this
             Needs to be after all uses of ~inject so jsContext is populated
@@ -343,27 +376,124 @@
             It would be nice to get some of it in the cached head so it can preload the chunks (that code also requires head).
         --}}
         <script>
+            console.log('now end: ' + performance.now());
+
             !function(w,d){
                 var done = false;
-                var script = d.createElement('script');
-                script.src = "{{cdn 'assets/dist/theme-bundle.main.js'}}";
-                script.crossOrigin = "anonymous";
-                script.fetchpriority = "high";
-                script.async = true;
-                script.onload = script.onreadystatechange = function () {
-                    if (!done) {
-                        var readyState = script.readyState;
-                        if (!readyState || readyState == 'loaded' || readyState == 'complete') {
-                            done = true;
-                            {{!-- Exported in app.js --}}
-                            w.stencilBootstrap("{{page_type}}", {{ jsContext }}).load();
+                
+                var stencilBootstrapLoad = function () {
+                    console.log('stencilBootstrapLoad');
+                    {{!-- Exported in app.js --}}
+                    // this has to be late so we have the jsContext filled in
+                    w.stencilBootstrap("{{page_type}}", {{ jsContext }}).load();
+                };
+                
+                var loadMainScript = function (onLoaded) {
+                    console.log('loadMainScript');
+                    var script = d.createElement('script');
+                    script.src = "{{cdn 'assets/dist/theme-bundle.main.js'}}";
+                    script.crossOrigin = "anonymous";
+                    script.fetchpriority = "low";
+                    script.async = true;
+                    script.onload = script.onreadystatechange = function () {
+                        if (!done) {
+                            var readyState = script.readyState;
+                            if (!readyState || readyState == 'loaded' || readyState == 'complete') {
+                                done = true;
+                                onLoaded();
+                            }
                         }
                     }
-                }
-                d.head.appendChild(script);
+                    d.head.appendChild(script);
+                };
+            
+                 var lcpTracker = function(entryList) {
+                    if (entryList) {
+                         var entries = entryList.getEntries();
+                         var lastEntry = entries[entries.length - 1];
+                    
+                         // Update `lcp` to the latest value, using `renderTime` if it's available,
+                         // otherwise using `loadTime`. (Note: `renderTime` may not be available on
+                         // image elements loaded cross-origin without the `Timing-Allow-Origin` header.)
+                         lcp = lastEntry.renderTime || lastEntry.loadTime;
+                         console.log('LCP '+lcp);
+                     }
+                 }
+
+                var waitForLcp = function (onLcp, longestLcpWait = 2500) {
+                    longestLcpWait = longestLcpWait || 2500; // LCP has failed anyhow, might as well run 
+
+                    var onLcpCalled = !1;
+
+                    var callOnLcp = function() {
+                        if (!onLcpCalled) {
+                            var args=[].slice.call(arguments);
+                            args.unshift('On LCP Called:');
+                            console.log.apply(console, args);
+
+                            onLcpCalled = !0;
+                            onLcp();
+
+                        }
+                    }
+
+                    var lcpTimeLeft = longestLcpWait - performance.now();
+
+                    console.log('lcpTimeLeft: '+longestLcpWait+' - ' + performance.now());
+
+                    if (lcpTimeLeft <= 0) {
+                        callOnLcp(longestLcpWait+' already reached');
+                        return;
+                    }
+        
+                    try {
+  
+                        if (!PerformanceObserver.supportedEntryTypes.includes('largest-contentful-paint')) {
+                            // would DCL be close to this point anyhow. we are at the end of the html?
+                            document.addEventListener('DOMContentLoaded', function() {
+                                callOnLcp('LCP not supported, Waited on DCL');
+                            });
+                            return;
+                        }
+
+                        // the LCP bug can mean no LCP event until first interaction. timeout will help us there.
+                        // also if something fails we always call the function
+                        console.log('waitForLcp: waiting for '+lcpTimeLeft);
+                        setTimeout(function() {
+                            callOnLcp('timed out');
+                        }, lcpTimeLeft);
+
+                        // https://developer.mozilla.org/en-US/docs/Web/API/PerformanceObserver/observe
+                        const po = new PerformanceObserver(function() {
+                            callOnLcp('LCP ' + performance.now());
+                        });  
+                        po.observe({type: 'largest-contentful-paint', buffered: true}); 
+                    }
+                    catch(e) {
+                        // make sure we always call it
+                        callOnLcp('exception', e);
+                    }
+                };
+
+                // the carousel starts its time once main is loaded. If the first rotation is before LCP it affects it. Delaying main to after LCP solves it
+                
+                // load script after LCP. this stops any main.js activity until after LCP. It becomes late in the execution queue.
+                waitForLcp(function() {loadMainScript(stencilBootstrapLoad)}, 10000);
+                
+                // load script then wait for LCP. main.js does a little code before LCP. Carousel code is after so does not delay things
+                //loadMainScript(function() {waitForLcp(stencilBootstrapLoad)});
+                
+                // just load script. main.js gets gong before LCP plus the carousel animation may delay things even more.
+                //loadMainScript(function() {stencilBootstrapLoad()});
+                
+                // track LCP
+                //waitForLcp(lcpTracker);
+
             }(window,document)
         </script>
 
         {{{footer.scripts}}}
+
+
     </body>
 </html>

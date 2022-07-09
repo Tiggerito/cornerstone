@@ -81,11 +81,21 @@ export default function (context) {
             )
             : () => {};
 
-        $carousel.slick({
-            accessibility: false,
-            arrows: isMultipleSlides,
-            customPaging,
-            dots: isMultipleSlides,
-        });
+        // can specify a delay before creating the carousel. Note: without the use of waitForLCP on main can mean this will cause large LCPs. 
+        // This is due to a bug in the LCP observer that will chose the sliders image (that is delayed) if it shows before any interaction.
+        // waitForLCP means this code will be delayed into LCP or 2.4 seconds have elapsed, reducing the chance for this problem.
+        const delay = $carousel.data("slickDelay") || 0;
+
+        // if no delay still use setTimeout to split the processing of each slide into a different task. It's a slow process and can cause a bad FID 
+        // splitting them up into separate task makes each one shorter and reduces potential input delays
+
+        setTimeout(() => {
+            $carousel.slick({
+                accessibility: false,
+                arrows: isMultipleSlides,
+                customPaging,
+                dots: isMultipleSlides,
+            });
+        }, delay);   
     });
 }
